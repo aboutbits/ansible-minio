@@ -1,0 +1,4 @@
+MINIO_OPTS="-C /etc/minio --address {{ minio_api_address }}:{{ minio_api_port }} --console-address {{ minio_console_address }}:{{ minio_console_port }}"
+MINIO_VOLUMES="/usr/local/share/minio/"
+MINIO_ROOT_USER="{{ minio_root_user }}"
+MINIO_ROOT_PASSWORD="{{ minio_root_password }}"
