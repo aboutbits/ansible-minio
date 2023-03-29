@@ -82,7 +82,7 @@
   loop: '{{ minio_users }}'
 
 - name: Create MinIO bucket
-  ansible.builtin.shell: mc mb minio/{{ item['name'] }}
+  ansible.builtin.shell: mc mb minio/{{ item['name'] }} --ignore-existing
   loop: '{{ minio_buckets }}'
 
 - name: Create temporary MinIO folder
