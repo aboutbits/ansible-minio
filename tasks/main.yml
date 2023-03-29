@@ -78,5 +78,39 @@
   ansible.builtin.shell: mc config host add minio {{ minio_api_scheme }}://{{ minio_api_address }}:{{ minio_api_port }}/ {{ minio_root_user }} {{ minio_root_password }}
 
 - name: Create MinIO user
-  ansible.builtin.shell: mc admin user add minio {{ item['access_key'] }} {{ item['secret_key'] }}
+  ansible.builtin.shell: mc admin user add minio {{ item['username'] }} {{ item['password'] }}
   loop: '{{ minio_users }}'
+
+- name: Create MinIO bucket
+  ansible.builtin.shell: mc mb minio/{{ item['name'] }}
+  loop: '{{ minio_buckets }}'
+
+- name: Create temporary MinIO folder
+  ansible.builtin.file:
+    dest: /tmp/minio
+    state: directory
+    owner: minio
+    group: minio
+    mode: 0755
+
+- name: Create policy file
+  ansible.builtin.template:
+    src: policies/{{ item['type'] }}.j2
+    dest: /tmp/minio/{{ item['user'] }}-{{ item['bucket'] }}.json
+    owner: minio
+    group: minio
+    mode: 0740
+  loop: '{{ minio_policies }}'
+
+- name: Create MinIO policy
+  ansible.builtin.shell: mc admin policy create minio {{ item['user'] }}-{{ item['bucket'] }} /tmp/minio/{{ item['user'] }}-{{ item['bucket'] }}.json
+  loop: '{{ minio_policies }}'
+
+- name: Attach MinIO user to policy
+  ansible.builtin.shell: mc admin policy attach minio {{ item['bucket'] }} --user {{ item['user'] }}
+  loop: '{{ minio_policies }}'
+
+- name: Delete temporary policies folder
+  ansible.builtin.file:
+    dest: /tmp/minio
+    state: absent

@@ -5,3 +5,5 @@ minio_api_port: 9000
 minio_console_address: 127.0.0.1
 minio_console_port: 9001
 minio_users: []
+minio_buckets: []
+minio_policies: []

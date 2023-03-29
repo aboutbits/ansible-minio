@@ -12,6 +12,8 @@ MinIO installation role.
 - `minio_root_user`: The username of the root user
 - `minio_root_password`: The password of the root user
 - `minio_users`: A list of users that should get access to the server
+- `minio_buckets`: A list of buckets that should be created
+- `minio_policies`: A list of policies that grants users access to buckets
 
 ## Example Playbook
 
@@ -29,8 +31,14 @@ MinIO installation role.
         minio_root_user: minio
         minio_root_password: xxx
         minio_users:
-          - access_key: app
-            secret_key: xxx
+          - username: app
+            password: xxx
+        minio_buckets:
+          - name: app
+        minio_policies:
+          - username: app
+            bucket: app
+            type: readwrite
 ```
 
 ## Versioning
