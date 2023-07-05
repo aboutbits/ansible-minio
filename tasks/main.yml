@@ -114,7 +114,7 @@
   loop: '{{ minio_policies }}'
 
 - name: Attach MinIO user to policy
-  ansible.builtin.shell: if jq -e '.result.policyMappings | map(select(.policy == "{{ item['user'] }}-{{ item['bucket'] }}")) | .[].users | index("{{ item['user'] }}")'; then mc admin policy attach minio {{ item['user'] }}-{{ item['bucket'] }} --user {{ item['user'] }}; fi
+  ansible.builtin.shell: "if jq -e '.result.policyMappings | map(select(.policy == \"{{ item['user'] }}-{{ item['bucket'] }}\")) | .[].users | index(\"{{ item['user'] }}\")'; then mc admin policy attach minio {{ item['user'] }}-{{ item['bucket'] }} --user {{ item['user'] }}; fi"
   loop: '{{ minio_policies }}'
 
 - name: Delete temporary policies folder
