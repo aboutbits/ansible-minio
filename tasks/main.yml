@@ -1,4 +1,11 @@
 ---
+- name: Install dependencies
+  ansible.builtin.apt:
+    name: '{{ item }}'
+    state: latest
+  loop:
+    - "jq"
+
 - name: Create minio user
   ansible.builtin.user:
     name: 'minio'
